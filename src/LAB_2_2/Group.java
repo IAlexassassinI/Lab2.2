@@ -1,9 +1,9 @@
 package LAB_2_2;
 
-import Exceptions.NegativePriceException;
-import Exceptions.NegativeQuantityException;
-import Exceptions.ProductAlreadyExistException;
-import Exceptions.ProductNotExistException;
+import LAB_2_2.Exceptions.NegativePriceException;
+import LAB_2_2.Exceptions.ProductAlreadyExistException;
+import LAB_2_2.Exceptions.ProductNotExistException;
+import LAB_2_2.Exceptions.SellMoreThenInStockException;
 
 import java.util.ArrayList;
 
@@ -61,7 +61,7 @@ public class Group {
 
     //TODO
 
-    public void editProduct(String productName, String newProductName, String newProductDescription, String newProductProducer, double newProductPrice, int newProductQuantity) throws ProductNotExistException, NegativePriceException, NegativeQuantityException {
+    public void editProduct(String productName, String newProductName, String newProductDescription, String newProductProducer, double newProductPrice, int newProductQuantity) throws ProductNotExistException, NegativePriceException, SellMoreThenInStockException {
         Product product = getProduct(productName);
         if(!(newProductName == null)) product.setName(newProductName);
         if(!(newProductDescription == null)) product.setDescription(newProductDescription);
