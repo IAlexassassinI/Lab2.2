@@ -1,6 +1,6 @@
 package LAB_2_2;
 
-import Exceptions.*;
+import LAB_2_2.Exceptions.*;
 
 import java.util.ArrayList;
 
