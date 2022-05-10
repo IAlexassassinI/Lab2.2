@@ -1,6 +1,13 @@
 package LAB_2_2.Graphic;
 
+import LAB_2_2.Exceptions.GroupNotExistException;
+import LAB_2_2.Exceptions.ProductNotExistException;
+import LAB_2_2.Group;
+import LAB_2_2.Model;
+import LAB_2_2.Product;
+
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -26,11 +33,12 @@ public class MainMenu extends JFrame{
     private JPanel PanelBottomLeft;
     private JLabel LabelGlobalValue;
 
-    //TODO CHANGE WITH MENU
+
     private JPanel CardPanelBottomRight;
     //===================================
     private JPanel PanelBottomRightChange;
     private JButton Cancel;
+    private JButton Edit;
     private JButton Apply;
     //===================================
     //===================================
@@ -47,40 +55,35 @@ public class MainMenu extends JFrame{
     private JTable TableDelta;
     private JScrollPane ScrollerDelta;
 
+    Model OS_Model;
 
+    String[] ColumnsForInfo = {"Name", "Description", "Producer", "Price", "Quantity", "Total value"};
+    String[] ColumnsForDelta = {"Name", "Quantity", "+++", "---"};
 
-    String[] columns = {
-            "Product", "Quantity"
+    Object[][] DataForInfo = {
+            { "AAAAA", 0, "", "", "", "22" , "111"},
+            { "BBBBB", 1, "", "", "", "22"  , "11"},
+            { "CCCCC", 2, "", "", "", "22"  , "11"},
+            { "DDDDD", 3, "", "", "", "22"  , "11"},
+            { "EEEEE", 4, "", "", "", "22"  , "11"},
     };
 
-    Object[][] data1 = {
-            { "AAAAA", 0 },
-            { "BBBBB", 1 },
-            { "CCCCC", 2 },
-            { "DDDDD", 3 },
-            { "EEEEE", 4 },
-    };
-
-
-
-    static Object[][] data2 = {
-            { "AAAAA", 0 },
-            { "BBBBB", 1 },
-            { "CCCCC", 2 },
-            { "DDDDD", 3 },
-            { "EEEEE", 4 },
-            { "AAAAA", 0 },
-            { "BBBBB", 1 },
-            { "CCCCC", 2 },
-            { "DDDDD", 3 },
-            { "EEEEE", 4 },
+    Object[][] DataForDelta = {
+            { "AAAAA", 0, "", ""},
+            { "BBBBB", 1, "", ""},
+            { "CCCCC", 2, "", ""},
+            { "DDDDD", 3, "", ""},
+            { "EEEEE", 4, "", ""},
     };
 
 
-    public MainMenu(){
+
+
+
+    public MainMenu(Model Model){
         super("Stock Controller");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
+        OS_Model = Model;
         this.setSize(800, 600);
         //this.setResizable(false);
         this.setLocationRelativeTo(null);
@@ -143,12 +146,15 @@ public class MainMenu extends JFrame{
         CardPanelBottomRight = new JPanel(new CardLayout());
         PanelBottom.add(CardPanelBottomRight, BorderLayout.EAST);
 
-        //TODO CHANGE WITH MENU
+
         PanelBottomRightDeleteAdd = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         CardPanelBottomRight.add(PanelBottomRightDeleteAdd, "FOR_INFO");
 
         Delete = new JButton("Delete");
         PanelBottomRightDeleteAdd.add(Delete);
+
+        Edit = new JButton("Edit");
+        PanelBottomRightDeleteAdd.add(Edit);
 
         Add = new JButton("Add");
         PanelBottomRightDeleteAdd.add(Add);
@@ -156,7 +162,7 @@ public class MainMenu extends JFrame{
 
 
 
-        //TODO CHANGE WITH MENU
+
         PanelBottomRightChange = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         CardPanelBottomRight.add(PanelBottomRightChange, "FOR_DELTA");
 
@@ -171,7 +177,13 @@ public class MainMenu extends JFrame{
         CardPanelCenter = new JPanel(new CardLayout());
         PanelMain.add(CardPanelCenter, BorderLayout.CENTER);
 
-        TableInfo = new JTable(data1, columns);
+        DefaultTableModel DTM = new DefaultTableModel(DataForInfo, ColumnsForInfo){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        TableInfo = new JTable(DTM);
         TableInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         ScrollerInfo = new JScrollPane(TableInfo);
         CardPanelCenter.add(ScrollerInfo, "FOR_INFO");
@@ -179,7 +191,7 @@ public class MainMenu extends JFrame{
 
 
 
-        TableDelta = new JTable(data2, columns);
+        TableDelta = new JTable(DataForDelta, ColumnsForDelta);
         TableDelta.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         ScrollerDelta = new JScrollPane(TableDelta);
         CardPanelCenter.add(ScrollerDelta, "FOR_DELTA");
@@ -192,31 +204,50 @@ public class MainMenu extends JFrame{
     private void initListeners(){
         MainMenu THIS = this;
 
-        ActionListener ChangeMenuToInfo = new ActionListener() {
+        ActionListener ButtonPressed = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                changeMenuToInfo();
+                if(e.getSource() == GlobalInfo){
+                    changeMenuToInfo();
+                }
+                else if(e.getSource() == Delta){
+                    changeMenuToDelta();
+                }
+                else if(e.getSource() == Add){
+                    AddMenu AddMenu = new AddMenu(THIS, true);
+                    AddMenu.setVisible(true);
+                }
+                else if(e.getSource() == Delete){
+                    try {
+                        DeleteSelectedRows();
+                    }
+                    catch(ProductNotExistException E){
+
+                    }
+                    catch(GroupNotExistException E){
+
+                    }
+                }
+                else if(e.getSource() == Edit){
+                    int SelectedRowIs = TableInfo.getSelectedRow();
+                    Object Obj = DataForInfo[SelectedRowIs][6];
+                    if(Obj.getClass() == Product.class){
+                        AddMenu AddMenu = new AddMenu(THIS, true, (Product)Obj);
+                        AddMenu.setVisible(true);
+                    }
+                    else if(Obj.getClass() == Group.class){
+                        AddMenu AddMenu = new AddMenu(THIS, true, (Group)Obj);
+                        AddMenu.setVisible(true);
+                    }
+                }
             }
         };
 
-        ActionListener ChangeMenuToDelta = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changeMenuToDelta();
-            }
-        };
-
-        Apply.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(THIS.TableInfo.getValueAt(0,0));
-                System.out.println(THIS.data1[0][0]);
-
-            }
-        });
-
-        GlobalInfo.addActionListener(ChangeMenuToInfo);
-        Delta.addActionListener(ChangeMenuToDelta);
+        GlobalInfo.addActionListener(ButtonPressed);
+        Delta.addActionListener(ButtonPressed);
+        Add.addActionListener(ButtonPressed);
+        Delete.addActionListener(ButtonPressed);
+        Edit.addActionListener(ButtonPressed);
     }
 
     private void changeMenuToDelta(){
@@ -225,8 +256,6 @@ public class MainMenu extends JFrame{
 
         TMP_CardLayout = (CardLayout)this.CardPanelCenter.getLayout();
         TMP_CardLayout.show(this.CardPanelCenter, "FOR_DELTA");
-
-        System.out.println("Delta");
     }
 
     private void changeMenuToInfo(){
@@ -235,8 +264,52 @@ public class MainMenu extends JFrame{
 
         TMP_CardLayout = (CardLayout)this.CardPanelCenter.getLayout();
         TMP_CardLayout.show(this.CardPanelCenter, "FOR_INFO");
+    }
 
-        System.out.println("Info");
+    private void DeleteSelectedRows() throws GroupNotExistException, ProductNotExistException {
+        int SelectedRows[] = TableInfo.getSelectedRows();
+        Object Rows[] = new Object[SelectedRows.length];
+        for (int i = 0; i < SelectedRows.length; i++){
+            Rows[i] = DataForInfo[SelectedRows[i]][5];
+        }
+        for(int i = 0; i < SelectedRows.length; i++){
+            if(Rows[i].getClass() == Product.class){
+               OS_Model.removeProduct((Product)Rows[i]);
+            }
+            else{
+                OS_Model.removeGroup(((Group)Rows[i]).getName()); //TODO Maybe
+            }
+        }
+        UpdateInfoTable();
+    }
+
+    private void UpdateInfoTable(){ //TODO Make Refresh All method
+        TableInfo.setModel(new DefaultTableModel(DataForInfo,ColumnsForInfo){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        }) ;
+    }
+
+
+
+    //TODO Wait for implementation of ArrayGropus
+    private Object[][] ParseToInfoTableData(ArrayList<Group> ModelData){
+        int Rows = ModelData.size();
+        int Cols = 7; //4
+        Object Res[][]  = new Object[Rows][Cols];
+
+        for(int i = 0; i < Rows; i++){
+            Group TMP_Group = ModelData.get(i);
+
+        }
+
+        return null;
+    }
+
+    private Object[] ParseGroupToInfoRow(Group InGroup){
+        return new Object[]{InGroup.getName(), "", "", "" ,"", InGroup.getTotalCost(), InGroup};
     }
 
 

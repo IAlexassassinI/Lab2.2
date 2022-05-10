@@ -1,5 +1,9 @@
 package LAB_2_2;
 
+import LAB_2_2.Exceptions.NegativePriceException;
+import LAB_2_2.Exceptions.ProductAlreadyExistException;
+import LAB_2_2.Exceptions.ProductNotExistException;
+import LAB_2_2.Exceptions.SellMoreThenInStockException;
 import java.util.ArrayList;
 import java.util.Objects;
 
