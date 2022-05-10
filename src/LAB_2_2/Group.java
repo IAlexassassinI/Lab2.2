@@ -24,7 +24,7 @@ public class Group extends ArrayList<Product> {
     }
 
     public void setVisible(boolean visible) {
-        visible = visible;
+        this.visible = visible;
     }
 
     public double getTotalCost() {
@@ -97,7 +97,6 @@ public class Group extends ArrayList<Product> {
 
     @Override
     public String toString() {
-        return name;
+        return this.name;
     }
-
 }
