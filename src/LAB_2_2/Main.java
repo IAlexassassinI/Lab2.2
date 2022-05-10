@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
 	// write your code here
+        //MainMenu MM = new MainMenu(new Stock());
         MainMenu MM = new MainMenu();
         MM.setVisible(true);
 

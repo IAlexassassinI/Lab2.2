@@ -1,21 +1,17 @@
 package LAB_2_2;
 
-import Exceptions.NegativePriceException;
-import Exceptions.NegativeQuantityException;
-import Exceptions.ProductAlreadyExistException;
-import Exceptions.ProductNotExistException;
-
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class Group {
+public class Group extends ArrayList<Product> {
 
     private String name;
     private boolean visible;
-    private ArrayList<Product> products;
+    //private ArrayList<Product> products;
 
     public Group(String name) {
         this.name = name;
-        this.products = new ArrayList<>();
+        //this.products = new ArrayList<>();
         this.visible = true;
     }
 
@@ -29,17 +25,25 @@ public class Group {
 
     public double getTotalCost() {
         double totalCost = 0;
-        for(Product product : this.products) {
+        for(Product product : this) {
             totalCost += product.getTotalCost();
         }
         return totalCost;
     }
 
-    public ArrayList<Product> getAllProducts() {
+    /*public ArrayList<Product> getAllProducts() {
         return products;
+    }*/
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Group group = (Group) o;
+        return Objects.equals(name, group.name);
     }
 
-    public ArrayList<Product> getProducts(String productNamePart) {
+    /*public ArrayList<Product> getProducts(String productNamePart) {
         ArrayList<Product> res = new ArrayList<>();
         for(Product product : this.products) {
             if(product.getName().matches("\\." + productNamePart + "\\.")) res.add(product);
@@ -59,8 +63,6 @@ public class Group {
         this.products.add(product);
     }
 
-    //TODO
-
     public void editProduct(String productName, String newProductName, String newProductDescription, String newProductProducer, double newProductPrice, int newProductQuantity) throws ProductNotExistException, NegativePriceException, NegativeQuantityException {
         Product product = getProduct(productName);
         if(!(newProductName == null)) product.setName(newProductName);
@@ -79,7 +81,7 @@ public class Group {
     public void removeProduct(Product product) throws ProductNotExistException {
         if(!this.products.contains(product))throw new ProductNotExistException();
         this.products.remove(product);
-    }
+    }*/
 
     public String getName() {
         return this.name;
