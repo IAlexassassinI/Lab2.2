@@ -2,12 +2,13 @@ package LAB_2_2;
 
 import LAB_2_2.Exceptions.*;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public interface Model {
 
     double getTotalCost();
-    double getTotalCost(String groupName);
+    double getTotalCost(String groupName)throws GroupNotExistException;
 
     void addGroup(Group group) throws GroupAlreadyExistException;
     void addProduct(Product product, Group group) throws ProductAlreadyExistException, GroupNotExistException;
@@ -22,4 +23,6 @@ public interface Model {
 
     void delta(ArrayList<Product> products, ArrayList<Integer> deltas) throws ProductNotExistException, SellMoreThenInStockException, ProductsAndDeltasArraysNotMatchException;
 
+    boolean load(File file);
+    boolean save(File file);
 }
