@@ -3,15 +3,19 @@ package LAB_2_2.Graphic;
 import LAB_2_2.Exceptions.GroupNotExistException;
 import LAB_2_2.Exceptions.ProductNotExistException;
 import LAB_2_2.Group;
+import LAB_2_2.Main;
 import LAB_2_2.Model;
 import LAB_2_2.Product;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 
 public class MainMenu extends JFrame{
@@ -23,6 +27,7 @@ public class MainMenu extends JFrame{
     private JTextField TextFieldForProductSearch;
     private JLabel LabelForGroupSearch;
     private JTextField TextFieldForGroupSearch;
+    private JButton Search;
 
     private JPanel PanelLeft;
     private JPanel PanelGridButtons;
@@ -49,31 +54,31 @@ public class MainMenu extends JFrame{
 
     private JPanel CardPanelCenter;
 
-    private JTable TableInfo;
+    private JTable_GP TableInfo;
     private JScrollPane ScrollerInfo;
 
-    private JTable TableDelta;
+    private JTable_GP TableDelta;
     private JScrollPane ScrollerDelta;
 
     Model OS_Model;
 
-    String[] ColumnsForInfo = {"Name", "Description", "Producer", "Price", "Quantity", "Total value"};
-    String[] ColumnsForDelta = {"Name", "Quantity", "+++", "---"};
+
+
 
     Object[][] DataForInfo = {
-            { "AAAAA", 0, "", "", "", "22" , "111"},
-            { "BBBBB", 1, "", "", "", "22"  , "11"},
-            { "CCCCC", 2, "", "", "", "22"  , "11"},
-            { "DDDDD", 3, "", "", "", "22"  , "11"},
-            { "EEEEE", 4, "", "", "", "22"  , "11"},
+            { new Product("1","1","1",1,1,new Group("AAA")), 0, "", "", "", ""},
+            { new Group("WWW"), 1, "", "", "", "22"},
+            { "CCCCC", 2, "", "", "", "22"},
+            { "DDDDD", 3, "", "", "", "22"},
+            { "EEEEE", 4, "", "", "", "22"},
     };
 
     Object[][] DataForDelta = {
-            { "AAAAA", 0, "", ""},
-            { "BBBBB", 1, "", ""},
-            { "CCCCC", 2, "", ""},
-            { "DDDDD", 3, "", ""},
-            { "EEEEE", 4, "", ""},
+            { new Product("1","1","1",1,1,new Group("AAA")), 0, "", "", ""},
+            { new Group("WWW"), 1, "", "", ""},
+            { "CCCCC", 2, "", "", ""},
+            { "DDDDD", 3, "", "", ""},
+            { "EEEEE", 4, "", "", ""},
     };
 
 
@@ -115,6 +120,9 @@ public class MainMenu extends JFrame{
 
         TextFieldForGroupSearch = new JTextField(16);
         PanelSearch.add(TextFieldForGroupSearch);
+
+        Search = new JButton("Search");
+        PanelSearch.add(Search);
 
 
 
@@ -177,26 +185,21 @@ public class MainMenu extends JFrame{
         CardPanelCenter = new JPanel(new CardLayout());
         PanelMain.add(CardPanelCenter, BorderLayout.CENTER);
 
-        DefaultTableModel DTM = new DefaultTableModel(DataForInfo, ColumnsForInfo){
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        };
-        TableInfo = new JTable(DTM);
+        DefaultTableModelInfo DTMI = new DefaultTableModelInfo(DataForInfo);
+        TableInfo = new JTable_GP(DTMI);
         TableInfo.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         ScrollerInfo = new JScrollPane(TableInfo);
         CardPanelCenter.add(ScrollerInfo, "FOR_INFO");
 
 
 
-
-        TableDelta = new JTable(DataForDelta, ColumnsForDelta);
+        DefaultTableModelDelta DTMD = new DefaultTableModelDelta(DataForDelta);
+        TableDelta = new JTable_GP(DTMD);
         TableDelta.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         ScrollerDelta = new JScrollPane(TableDelta);
         CardPanelCenter.add(ScrollerDelta, "FOR_DELTA");
 
-
+        UpdateDeltaTable();
 
         this.add(PanelMain);
     }
@@ -220,6 +223,7 @@ public class MainMenu extends JFrame{
                 else if(e.getSource() == Delete){
                     try {
                         DeleteSelectedRows();
+                        UpdateAll();
                     }
                     catch(ProductNotExistException E){
 
@@ -229,25 +233,29 @@ public class MainMenu extends JFrame{
                     }
                 }
                 else if(e.getSource() == Edit){
-                    int SelectedRowIs = TableInfo.getSelectedRow();
-                    Object Obj = DataForInfo[SelectedRowIs][6];
-                    if(Obj.getClass() == Product.class){
-                        AddMenu AddMenu = new AddMenu(THIS, true, (Product)Obj);
-                        AddMenu.setVisible(true);
-                    }
-                    else if(Obj.getClass() == Group.class){
-                        AddMenu AddMenu = new AddMenu(THIS, true, (Group)Obj);
-                        AddMenu.setVisible(true);
-                    }
+                    DoEdit();
+                    UpdateAll();
+                }
+                else if(e.getSource() == Search){
+                    UpdateAll();
                 }
             }
         };
+
+        Apply.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+                System.out.println(DataForDelta[TableDelta.getSelectedRow()][0]);
+            }
+        });
 
         GlobalInfo.addActionListener(ButtonPressed);
         Delta.addActionListener(ButtonPressed);
         Add.addActionListener(ButtonPressed);
         Delete.addActionListener(ButtonPressed);
         Edit.addActionListener(ButtonPressed);
+        Search.addActionListener(ButtonPressed);
     }
 
     private void changeMenuToDelta(){
@@ -270,46 +278,118 @@ public class MainMenu extends JFrame{
         int SelectedRows[] = TableInfo.getSelectedRows();
         Object Rows[] = new Object[SelectedRows.length];
         for (int i = 0; i < SelectedRows.length; i++){
-            Rows[i] = DataForInfo[SelectedRows[i]][5];
+            Rows[i] = DataForInfo[SelectedRows[i]][0];
         }
         for(int i = 0; i < SelectedRows.length; i++){
             if(Rows[i].getClass() == Product.class){
                OS_Model.removeProduct((Product)Rows[i]);
             }
-            else{
+            else if(Rows[i].getClass() == Group.class){
                 OS_Model.removeGroup(((Group)Rows[i]).getName()); //TODO Maybe
             }
         }
+    }
+
+    private void DoEdit(){
+        int SelectedRowIs = TableInfo.getSelectedRow();
+        if(SelectedRowIs == -1){
+            return;
+        }
+        Object Obj = DataForInfo[SelectedRowIs][0];
+        if(Obj.getClass() == Product.class){
+            AddMenu AddMenu = new AddMenu(this, true, (Product)Obj);
+            AddMenu.setVisible(true);
+        }
+        else if(Obj.getClass() == Group.class){
+            AddMenu AddMenu = new AddMenu(this, true, (Group)Obj);
+            AddMenu.setVisible(true);
+        }
+    }
+
+    private void UpdateInfoTable(){
+        DefaultTableModelInfo DTMI = new DefaultTableModelInfo(DataForInfo);
+        TableInfo.setDefaultRenderer(TableColumn.class, new CellRenderer_GP());
+
+
+        TableInfo.setModel(DTMI);
+    }
+
+    private void UpdateDeltaTable(){
+        DefaultTableModelDelta DTMD = new DefaultTableModelDelta(DataForDelta);
+
+        JTextField OnlyNumsField = new JTextField();
+        OnlyNumsField.addKeyListener(new ConsumeNotDigits());
+
+        TableDelta.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(OnlyNumsField));
+        TableDelta.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(OnlyNumsField));
+
+        TableDelta.setModel(DTMD);
+    }
+
+    private void DoSearch(){
+        String ProductSearch = TextFieldForProductSearch.getText();
+        String GroupSearch = TextFieldForGroupSearch.getText();
+        ArrayList<Group> ModelData = OS_Model.getStockByFilter(GroupSearch, ProductSearch);
+        DataForInfo = ParseToInfoTableData(ModelData);
+        DataForDelta = ParseToDeltaTableData(ModelData);
+    }
+
+    void UpdateAll(){
+        DoSearch();
         UpdateInfoTable();
+        UpdateDeltaTable();
     }
-
-    private void UpdateInfoTable(){ //TODO Make Refresh All method
-        TableInfo.setModel(new DefaultTableModel(DataForInfo,ColumnsForInfo){
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
-        }) ;
-    }
-
 
 
     //TODO Wait for implementation of ArrayGropus
     private Object[][] ParseToInfoTableData(ArrayList<Group> ModelData){
-        int Rows = ModelData.size();
-        int Cols = 7; //4
-        Object Res[][]  = new Object[Rows][Cols];
+        LinkedList<Object[]> Res = new LinkedList<Object[]>();
+        for(int i = 0; i < ModelData.size(); i++){
 
-        for(int i = 0; i < Rows; i++){
             Group TMP_Group = ModelData.get(i);
+            if(TMP_Group.isVisible()){
+                Res.add(ParseGroupToInfoRow(TMP_Group));
+                for(int j = 0; j < TMP_Group.size(); j++){
+                    if(TMP_Group.get(j).isVisible()){
+                        Res.add(ParseProductToInfoRow(TMP_Group.get(j)));
+                    }
+                }
+            }
 
         }
+        return Res.toArray(new Object[][]{});
+    }
 
-        return null;
+    private Object[][] ParseToDeltaTableData(ArrayList<Group> ModelData){
+        LinkedList<Object[]> Res = new LinkedList<Object[]>();
+        for(int i = 0; i < ModelData.size(); i++){
+            Group TMP_Group = ModelData.get(i);
+            if(TMP_Group.isVisible()){
+                Res.add(ParseGroupToDeltaRow(TMP_Group));
+                for(int j = 0; j < TMP_Group.size(); j++){
+                    if(TMP_Group.get(j).isVisible()){
+                        Res.add(ParseProductToDeltaRow(TMP_Group.get(j)));
+                    }
+                }
+            }
+        }
+        return Res.toArray(new Object[][]{});
+    }
+
+    private Object[] ParseProductToInfoRow(Product InProduct){
+        return new Object[]{InProduct, InProduct.getDescription(), InProduct.getProducer(), ""+InProduct.getPrice(), ""+InProduct.getQuantity(), ""+InProduct.getTotalCost()};
+    }
+
+    private Object[] ParseProductToDeltaRow(Product InProduct){
+        return new Object[]{InProduct, ""+InProduct.getQuantity(), "", ""};
     }
 
     private Object[] ParseGroupToInfoRow(Group InGroup){
-        return new Object[]{InGroup.getName(), "", "", "" ,"", InGroup.getTotalCost(), InGroup};
+        return new Object[]{InGroup, "", "", "" ,"", ""+InGroup.getTotalCost()};
+    }
+
+    private Object[] ParseGroupToDeltaRow(Group InGroup){
+        return new Object[]{InGroup, "", "", ""};
     }
 
 
