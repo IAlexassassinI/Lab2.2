@@ -42,12 +42,11 @@ public class Stock implements Model {
     @Override
     public void addProduct(Product product, Group group) throws ProductAlreadyExistException, GroupNotExistException {
         for(Group existedGroup : this.groups) {
+            if(existedGroup.contains(product)) throw new ProductAlreadyExistException();
+        }
+        for(Group existedGroup : this.groups) {
             if(existedGroup.equals(group)) {
-                for(Product existedProduct : existedGroup) {
-                    if(existedProduct.equals(product)) throw new ProductAlreadyExistException();
-                }
                 existedGroup.add(product);
-                sortProducts(existedGroup);
                 return;
             }
         }
