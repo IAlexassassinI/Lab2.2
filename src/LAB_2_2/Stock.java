@@ -57,14 +57,14 @@ public class Stock implements Model {
     @Override
     public ArrayList<Group> getStockByFilter(String groupNamePart, String productNamePart) {
         for(Group group : this.groups) {
-            if(group.getName().matches("\\." + groupNamePart + "\\.")) {
+            if(group.getName().matches("\\.*" + groupNamePart + "\\.*")) {
                 group.setVisible(true);
             }
             else {
                 group.setVisible(false);
             }
             for(Product product : group) {
-                if(product.getName().matches("\\." + productNamePart + "\\.")) {
+                if(product.getName().matches("\\.*" + productNamePart + "\\.*")) {
                     product.setVisible(true);
                 }
                 else {

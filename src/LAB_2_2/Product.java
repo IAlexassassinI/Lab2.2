@@ -103,4 +103,9 @@ public class Product {
     public void setGroup(Group group) {
         this.group = group;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

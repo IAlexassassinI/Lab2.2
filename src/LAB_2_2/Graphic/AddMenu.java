@@ -174,6 +174,7 @@ public class AddMenu extends JDialog {
                 else if(e.getSource() == Apply){
                     try {
                         HandleApply();
+                        THIS.Owner.UpdateAll();
                     }
                     catch(NumberFormatException E){
                         JOptionPane.showMessageDialog(THIS, "You inputted incorrect numbers", "NumberFormatException", JOptionPane.ERROR_MESSAGE);
