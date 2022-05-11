@@ -1,4 +1,4 @@
-package LAB_2_2.Graphic;
+package LAB_2_2.Graphic.Utils;
 
 import LAB_2_2.Group;
 
@@ -6,7 +6,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class DefaultTableModelDelta extends DefaultTableModel {
     private static final String[] ColumnsForDelta = {"Name", "Quantity", "+++", "---"};
-    DefaultTableModelDelta(Object Data[][]){
+    public DefaultTableModelDelta(Object Data[][]){
         super(Data, ColumnsForDelta);
     }
 

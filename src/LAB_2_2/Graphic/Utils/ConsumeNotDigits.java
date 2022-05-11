@@ -1,4 +1,4 @@
-package LAB_2_2.Graphic;
+package LAB_2_2.Graphic.Utils;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
