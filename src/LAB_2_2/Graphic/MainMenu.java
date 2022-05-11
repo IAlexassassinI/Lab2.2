@@ -90,6 +90,8 @@ public class MainMenu extends JFrame{
         UpdateAll();
     }
 
+    final static Color BackGroundColor = new Color(102, 187, 106);
+
     private void initMainMenu(){
         PanelMain = new JPanel(new BorderLayout());
         JLabel BorderCreator = new JLabel("   ");
@@ -190,6 +192,19 @@ public class MainMenu extends JFrame{
         ScrollerDelta = new JScrollPane(TableDelta);
         CardPanelCenter.add(ScrollerDelta, "FOR_DELTA");
 
+        PanelMain.setBackground(BackGroundColor);
+        PanelLeft.setBackground(BackGroundColor);
+        PanelBottom.setBackground(BackGroundColor);
+        PanelSearch.setBackground(BackGroundColor);
+        PanelBottomRightDeleteAdd.setBackground(BackGroundColor);
+        PanelBottomLeft.setBackground(BackGroundColor);
+        PanelBottomRightChange.setBackground(BackGroundColor);
+        PanelGridButtons.setBackground(BackGroundColor);
+
+
+
+
+
         UpdateDeltaTable();
 
         this.add(PanelMain);
@@ -233,6 +248,7 @@ public class MainMenu extends JFrame{
                 else if(e.getSource() == Apply){
                     try {
                         HandelApply();
+                        UpdateAll();
                     }
                     catch(NumberFormatException E){
                         JOptionPane.showMessageDialog(THIS, "You inputted incorrect numbers", "NumberFormatException", JOptionPane.ERROR_MESSAGE);
@@ -351,28 +367,52 @@ public class MainMenu extends JFrame{
         UpdateDeltaTable();
     }
 
-    //TODO Zatup nache tam
     private void HandelApply() throws NumberFormatException, SellMoreThenInStockException, ProductNotExistException, ProductsAndDeltasArraysNotMatchException {
         ArrayList<Product> ForObrProd = new ArrayList<>();
+
+        ArrayList<Integer> PlusDelta = new ArrayList<>();
+        ArrayList<Integer> MinusDelta = new ArrayList<>();
+
         ArrayList<Integer> ForObrInts = new ArrayList<>();
         for(int i = 0; i < DataForDelta.length; i++){
             if(DataForDelta[i][0].getClass() == Product.class){
                 ForObrProd.add((Product)DataForDelta[i][0]);
-                System.out.println(TableDelta.getValueAt(i,2));
-                int PlusDelta = Integer.parseInt((String)TableDelta.getValueAt(i,2));
-                int MinusDelta = Integer.parseInt((String)TableDelta.getValueAt(i,3));
-                ForObrInts.add(PlusDelta-MinusDelta);
+
+                String InDelta = (String)TableDelta.getDataModel().getValueAt(i,2);
+                if(InDelta == ""){
+                    PlusDelta.add(0);
+                }
+                else {
+                    PlusDelta.add(Integer.parseInt(InDelta));
+                }
+
+                InDelta = (String)TableDelta.getDataModel().getValueAt(i,3);
+                if(InDelta == ""){
+                    MinusDelta.add(0);
+                }
+                else {
+                    MinusDelta.add(Integer.parseInt(InDelta));
+                }
             }
         }
+
+        StringBuilder ForOutput = new StringBuilder();
+        for(int i = 0; i < ForObrProd.size(); i++){
+            ForObrInts.add(PlusDelta.get(i)-MinusDelta.get(i));
+            if(PlusDelta.get(i) != 0 || MinusDelta.get(i) != 0){
+                ForOutput.append(ForObrProd.get(i)).append(": Get: ").append(PlusDelta.get(i)).append(" | Sold: ").append(MinusDelta.get(i)).append("\n");
+            }
+        }
+
         OS_Model.delta(ForObrProd, ForObrInts);
+        Viewer MessageViewer = new Viewer(this, true, ForOutput.toString());
+        MessageViewer.setVisible(true);
     }
 
-    //TODO Add UpdateAllAfter
     private void HandelCancel(){
         UpdateAll();
     }
 
-    //TODO Wait for implementation of ArrayGropus
     private Object[][] ParseToInfoTableData(ArrayList<Group> ModelData){
         LinkedList<Object[]> Res = new LinkedList<Object[]>();
         for(int i = 0; i < ModelData.size(); i++){
