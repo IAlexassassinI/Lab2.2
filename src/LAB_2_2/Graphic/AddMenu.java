@@ -38,7 +38,8 @@ public class AddMenu extends JDialog {
 
     MainMenu Owner;
 
-    //TODO Must refresh Table
+    final static Color BackGroundColor = new Color(200, 230, 201);
+
     AddMenu(Frame owner, boolean modal){
         super(owner, modal);
         Owner = (MainMenu)owner;
@@ -75,6 +76,7 @@ public class AddMenu extends JDialog {
         this.setLocationRelativeTo(owner);
 
         MainPanel = new JPanel(new BorderLayout());
+        MainPanel.setBackground(BackGroundColor);
         this.add(MainPanel);
 
 
