@@ -1,22 +1,17 @@
-package LAB_2_2.Graphic;
+package LAB_2_2.Graphic.Utils;
 
 import LAB_2_2.Group;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.UIResource;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
-import java.util.Date;
 
 public class JTable_GP extends JTable {
 
     final static Color BackGroundColor = new Color(200, 230, 201);
 
-    JTable_GP(TableModel Model){
+    public JTable_GP(TableModel Model){
         super(Model);
         this.setBackground(BackGroundColor);
         //this.setSelectionBackground(Color.red);
