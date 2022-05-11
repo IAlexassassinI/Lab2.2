@@ -10,8 +10,14 @@ public class Main {
 
     public static void main(String[] args) {
 
-        MainMenu MM = new MainMenu(new Stock());
-        MM.setVisible(true);
+
+        try {
+            MainMenu MM = new MainMenu(new Stock());
+            MM.setVisible(true);
+        }
+        catch (Exception e){
+
+        }
 
     }
 }
