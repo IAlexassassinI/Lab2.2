@@ -94,16 +94,14 @@ public class DataFile {
         return true;
     }
 
-    private boolean deleteDirectory(File file)
-    {
+    private boolean deleteDirectory(File file) {
         for (File subfile : file.listFiles()) {
             if (subfile.isDirectory()) {
                 deleteDirectory(subfile);
             }
-            if(subfile.delete()) return false;
+            else if(!subfile.delete()) return false;
         }
-        if(!file.delete())return false;
-        return true;
+        return file.delete();
     }
 
 }
