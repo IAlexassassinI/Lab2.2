@@ -127,11 +127,11 @@ public class Stock implements Model {
     public void delta(ArrayList<Product> products, ArrayList<Integer> deltas) throws ProductNotExistException, SellMoreThenInStockException, ProductsAndDeltasArraysNotMatchException {
         if(products == null || deltas == null || products.size() != deltas.size()) throw new ProductsAndDeltasArraysNotMatchException();
         for(int i = 0; i < products.size(); i++) {
-            boolean isProductExist = true;
+            boolean isProductExist = false;
             for(Group group : this.groups) {
                 if(group.contains(products.get(i))) {
                     products.get(i).delta(deltas.get((i)));
-                    isProductExist = false;
+                    isProductExist = true;
                     break;
                 }
             }
