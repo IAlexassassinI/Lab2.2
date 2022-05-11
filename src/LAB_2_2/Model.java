@@ -15,8 +15,8 @@ public interface Model {
 
     ArrayList<Group> getStockByFilter(String groupNamePart, String productNamePart);
 
-    void editProduct(Product product, Product newProduct) throws ProductNotExistException;
-    void editGroup(String groupName, String newGroup) throws GroupNotExistException;
+    void editProduct(Product product, Product newProductName) throws ProductNotExistException, ProductAlreadyExistException;
+    void editGroup(String groupName, String newGroupName) throws GroupNotExistException, GroupAlreadyExistException;
 
     void removeProduct(Product product) throws ProductNotExistException;
     void removeGroup(String groupName) throws GroupNotExistException;

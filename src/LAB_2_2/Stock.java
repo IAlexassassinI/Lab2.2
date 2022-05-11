@@ -75,12 +75,15 @@ public class Stock implements Model {
     }
 
     @Override
-    public void editProduct(Product product, Product newProduct) throws ProductNotExistException {
+    public void editProduct(Product product, Product newProductName) throws ProductNotExistException, ProductAlreadyExistException {
+        for(Group group : this.groups) {
+            if(group.contains(newProductName)) throw new ProductAlreadyExistException();
+        }
         for(Group group : this.groups) {
             for(Product existedProduct : group) {
                 if(existedProduct.equals(product)) {
                     group.remove(existedProduct);
-                    group.add(newProduct);
+                    group.add(newProductName);
                     sortProducts(group);
                     return;
                 }
@@ -90,10 +93,11 @@ public class Stock implements Model {
     }
 
     @Override
-    public void editGroup(String groupName, String newGroup) throws GroupNotExistException {
+    public void editGroup(String groupName, String newGroupName) throws GroupNotExistException, GroupAlreadyExistException {
+        if(this.groups.contains(new Group(newGroupName))) throw new GroupAlreadyExistException();
         for(Group group : this.groups) {
             if(group.getName().equals(groupName)) {
-                group.setName(newGroup);
+                group.setName(newGroupName);
                 sortGroups();
                 return;
             }
