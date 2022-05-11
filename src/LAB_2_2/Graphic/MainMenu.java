@@ -12,10 +12,8 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -64,7 +62,7 @@ public class MainMenu extends JFrame{
 
     Model OS_Model;
 
-
+    final static File WHERE_TO_SAVE = new File("Saves");
 
 
     Object[][] DataForInfo = {};
@@ -75,18 +73,21 @@ public class MainMenu extends JFrame{
 
 
 
-    public MainMenu(Model Model){
+    public MainMenu(Model Model) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         super("Stock Controller");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         OS_Model = Model;
         this.setSize(800, 600);
         //this.setResizable(false);
         this.setLocationRelativeTo(null);
+        OS_Model.load(WHERE_TO_SAVE);
 
 
 
         initMainMenu();
         initListeners();
+        UpdateAll();
     }
 
     private void initMainMenu(){
@@ -252,6 +253,17 @@ public class MainMenu extends JFrame{
             }
         };
 
+        WindowListener CloseWindowPanel = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (JOptionPane.showConfirmDialog(THIS, "Are you sure you want to close this window?", "Close Window?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+                    THIS.OS_Model.save(THIS.WHERE_TO_SAVE);
+                    System.exit(0);
+                }
+            }
+        };
+
+        this.addWindowListener(CloseWindowPanel);
 
         Cancel.addActionListener(ButtonPressed);
         Apply.addActionListener(ButtonPressed);
@@ -357,15 +369,6 @@ public class MainMenu extends JFrame{
 
     //TODO Add UpdateAllAfter
     private void HandelCancel(){
-        /*
-        for(int i = 0; i < DataForDelta.length; i++){
-            if(DataForDelta[i][0].getClass() == Product.class){
-                DataForDelta[i][2] = "";
-                DataForDelta[i][3] = "";
-            }
-        }
-
-         */
         UpdateAll();
     }
 
@@ -419,6 +422,7 @@ public class MainMenu extends JFrame{
     private Object[] ParseGroupToDeltaRow(Group InGroup){
         return new Object[]{InGroup, "", "", ""};
     }
+
 
 
 }
