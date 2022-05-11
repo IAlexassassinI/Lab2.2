@@ -2,12 +2,14 @@ package LAB_2_2.Graphic;
 
 import LAB_2_2.Exceptions.GroupNotExistException;
 import LAB_2_2.Exceptions.ProductNotExistException;
+import LAB_2_2.Exceptions.ProductsAndDeltasArraysNotMatchException;
+import LAB_2_2.Exceptions.SellMoreThenInStockException;
 import LAB_2_2.Group;
-import LAB_2_2.Main;
 import LAB_2_2.Model;
 import LAB_2_2.Product;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -65,21 +67,9 @@ public class MainMenu extends JFrame{
 
 
 
-    Object[][] DataForInfo = {
-            { new Product("1","1","1",1,1,new Group("AAA")), 0, "", "", "", ""},
-            { new Group("WWW"), 1, "", "", "", "22"},
-            { "CCCCC", 2, "", "", "", "22"},
-            { "DDDDD", 3, "", "", "", "22"},
-            { "EEEEE", 4, "", "", "", "22"},
-    };
+    Object[][] DataForInfo = {};
 
-    Object[][] DataForDelta = {
-            { new Product("1","1","1",1,1,new Group("AAA")), 0, "", "", ""},
-            { new Group("WWW"), 1, "", "", ""},
-            { "CCCCC", 2, "", "", ""},
-            { "DDDDD", 3, "", "", ""},
-            { "EEEEE", 4, "", "", ""},
-    };
+    Object[][] DataForDelta = {};
 
 
 
@@ -148,7 +138,7 @@ public class MainMenu extends JFrame{
         PanelBottomLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
         PanelBottom.add(PanelBottomLeft, BorderLayout.WEST);
 
-        LabelGlobalValue = new JLabel("Global Value of goods in stock");
+        LabelGlobalValue = new JLabel("Global Value of goods in stock: "+OS_Model.getTotalCost());
         PanelBottomLeft.add(LabelGlobalValue);
 
         CardPanelBottomRight = new JPanel(new CardLayout());
@@ -239,23 +229,39 @@ public class MainMenu extends JFrame{
                 else if(e.getSource() == Search){
                     UpdateAll();
                 }
+                else if(e.getSource() == Apply){
+                    try {
+                        HandelApply();
+                    }
+                    catch(NumberFormatException E){
+                        JOptionPane.showMessageDialog(THIS, "You inputted incorrect numbers", "NumberFormatException", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch(SellMoreThenInStockException E){
+                        JOptionPane.showMessageDialog(THIS, "You trying to sell more than have in stock", "SellMoreThenInStockException", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch(ProductNotExistException E){
+                        JOptionPane.showMessageDialog(THIS, "Product not exist", "ProductNotExistException", JOptionPane.ERROR_MESSAGE);
+                    }
+                    catch(ProductsAndDeltasArraysNotMatchException E){
+                        System.err.println("WTF");
+                    }
+                }
+                else if(e.getSource() == Cancel){
+                    HandelCancel();
+                }
             }
         };
 
-        Apply.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-                System.out.println(DataForDelta[TableDelta.getSelectedRow()][0]);
-            }
-        });
-
+        Cancel.addActionListener(ButtonPressed);
+        Apply.addActionListener(ButtonPressed);
         GlobalInfo.addActionListener(ButtonPressed);
         Delta.addActionListener(ButtonPressed);
         Add.addActionListener(ButtonPressed);
         Delete.addActionListener(ButtonPressed);
         Edit.addActionListener(ButtonPressed);
         Search.addActionListener(ButtonPressed);
+        TableDelta.addKeyListener(new ConsumeNotDigits());
     }
 
     private void changeMenuToDelta(){
@@ -308,21 +314,13 @@ public class MainMenu extends JFrame{
 
     private void UpdateInfoTable(){
         DefaultTableModelInfo DTMI = new DefaultTableModelInfo(DataForInfo);
-        TableInfo.setDefaultRenderer(TableColumn.class, new CellRenderer_GP());
-
-
+        TableInfo.setDefaultRenderer(TableColumn.class, new DefaultTableCellRenderer());
         TableInfo.setModel(DTMI);
     }
 
     private void UpdateDeltaTable(){
         DefaultTableModelDelta DTMD = new DefaultTableModelDelta(DataForDelta);
-
-        JTextField OnlyNumsField = new JTextField();
-        OnlyNumsField.addKeyListener(new ConsumeNotDigits());
-
-        TableDelta.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(OnlyNumsField));
-        TableDelta.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(OnlyNumsField));
-
+        TableDelta.setDefaultRenderer(TableColumn.class, new DefaultTableCellRenderer());
         TableDelta.setModel(DTMD);
     }
 
@@ -336,10 +334,40 @@ public class MainMenu extends JFrame{
 
     void UpdateAll(){
         DoSearch();
+        LabelGlobalValue.setText("Global Value of goods in stock: "+OS_Model.getTotalCost());
         UpdateInfoTable();
         UpdateDeltaTable();
     }
 
+    //TODO Zatup nache tam
+    private void HandelApply() throws NumberFormatException, SellMoreThenInStockException, ProductNotExistException, ProductsAndDeltasArraysNotMatchException {
+        ArrayList<Product> ForObrProd = new ArrayList<>();
+        ArrayList<Integer> ForObrInts = new ArrayList<>();
+        for(int i = 0; i < DataForDelta.length; i++){
+            if(DataForDelta[i][0].getClass() == Product.class){
+                ForObrProd.add((Product)DataForDelta[i][0]);
+                System.out.println(TableDelta.getValueAt(i,2));
+                int PlusDelta = Integer.parseInt((String)TableDelta.getValueAt(i,2));
+                int MinusDelta = Integer.parseInt((String)TableDelta.getValueAt(i,3));
+                ForObrInts.add(PlusDelta-MinusDelta);
+            }
+        }
+        OS_Model.delta(ForObrProd, ForObrInts);
+    }
+
+    //TODO Add UpdateAllAfter
+    private void HandelCancel(){
+        /*
+        for(int i = 0; i < DataForDelta.length; i++){
+            if(DataForDelta[i][0].getClass() == Product.class){
+                DataForDelta[i][2] = "";
+                DataForDelta[i][3] = "";
+            }
+        }
+
+         */
+        UpdateAll();
+    }
 
     //TODO Wait for implementation of ArrayGropus
     private Object[][] ParseToInfoTableData(ArrayList<Group> ModelData){

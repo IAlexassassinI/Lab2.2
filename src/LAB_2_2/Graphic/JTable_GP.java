@@ -24,8 +24,9 @@ public class JTable_GP extends JTable {
         else{
             c.setBackground(color2);
         }
-        if(getValueAt(row, 0).getClass() == Group.class){
-            c.setBackground(new Color(0, 255, 255, 255));
+
+        if(this.dataModel.getValueAt(row, 0).getClass() == Group.class){
+            c.setBackground(new Color(0,255,255));
         }
 
         return c;
