@@ -40,12 +40,22 @@ public class AddMenu extends JDialog {
 
     final static Color BackGroundColor = new Color(200, 230, 201);
 
-    AddMenu(Frame owner, boolean modal){
+    AddMenu(Frame owner, boolean modal, Object PG){
         super(owner, modal);
         Owner = (MainMenu)owner;
         InProd = null;
         InGroup = null;
-        initMainPanel(owner);
+        Group GG = null;
+        if(PG != null){
+            if(PG.getClass() == Group.class){
+                GG = (Group)PG;
+            }
+            else if(PG.getClass() == Product.class){
+                GG = ((Product)PG).getGroup();
+            }
+        }
+
+        initMainPanel(owner, GG);
         initListeners();
     }
 
@@ -54,7 +64,7 @@ public class AddMenu extends JDialog {
         Owner = (MainMenu)owner;
         InProd = prod;
         InGroup = null;
-        initMainPanel(owner);
+        initMainPanel(owner, null);
         initListeners();
     }
 
@@ -63,11 +73,11 @@ public class AddMenu extends JDialog {
         Owner = (MainMenu)owner;
         InProd = null;
         InGroup = group;
-        initMainPanel(owner);
+        initMainPanel(owner, null);
         initListeners();
     }
 
-    private void initMainPanel(Frame owner){
+    private void initMainPanel(Frame owner, Group GG){
         this.setTitle("Add menu");
         this.setLayout(new FlowLayout());
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -143,6 +153,9 @@ public class AddMenu extends JDialog {
 
         if(InGroup == null && InProd == null){
             MainPanel.add(new JPanel(new FlowLayout()).add(ChooseWhatToAdd), BorderLayout.NORTH);
+            if(GG != null){
+                GroupOfProduct.setSelectedItem(GG);
+            }
         }
         else if(InProd != null){
             CardLayout TMP_CardLayout = (CardLayout)this.CardForChange.getLayout();

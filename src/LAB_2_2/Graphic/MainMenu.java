@@ -236,7 +236,11 @@ public class MainMenu extends JFrame{
                     changeMenuToDelta();
                 }
                 else if(e.getSource() == Add){
-                    AddMenu AddMenu = new AddMenu(THIS, true);
+                    Object PG = null;
+                    if(THIS.TableInfo.getSelectedRow() != -1){
+                        PG = THIS.DataForInfo[THIS.TableInfo.getSelectedRow()][0];
+                    }
+                    AddMenu AddMenu = new AddMenu(THIS, true, PG);
                     AddMenu.setVisible(true);
                 }
                 else if(e.getSource() == Delete){
