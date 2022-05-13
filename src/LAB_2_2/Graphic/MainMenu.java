@@ -12,10 +12,12 @@ import LAB_2_2.Group;
 import LAB_2_2.Model;
 import LAB_2_2.Product;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -73,11 +75,13 @@ public class MainMenu extends JFrame{
 
     Object[][] DataForDelta = {};
 
+    Image Icon = null;
 
 
-
-    public MainMenu(Model Model) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    public MainMenu(Model Model) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         super("Stock Controller");
+        Icon = ImageIO.read(new File("Resourses\\Stock.png"));
+        this.setIconImage(Icon);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
         OS_Model = Model;
@@ -240,7 +244,12 @@ public class MainMenu extends JFrame{
                     if(THIS.TableInfo.getSelectedRow() != -1){
                         PG = THIS.DataForInfo[THIS.TableInfo.getSelectedRow()][0];
                     }
-                    AddMenu AddMenu = new AddMenu(THIS, true, PG);
+                    AddMenu AddMenu = null;
+                    try {
+                        AddMenu = new AddMenu(THIS, true, PG);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                     AddMenu.setVisible(true);
                 }
                 else if(e.getSource() == Delete){
@@ -256,7 +265,11 @@ public class MainMenu extends JFrame{
                     }
                 }
                 else if(e.getSource() == Edit){
-                    DoEdit();
+                    try {
+                        DoEdit();
+                    } catch (IOException E) {
+                        E.printStackTrace();
+                    }
                     UpdateAll();
                 }
                 else if(e.getSource() == Search){
@@ -349,7 +362,7 @@ public class MainMenu extends JFrame{
         }
     }
 
-    private void DoEdit(){
+    private void DoEdit() throws IOException {
         int SelectedRowIs = TableInfo.getSelectedRow();
         if(SelectedRowIs == -1){
             return;

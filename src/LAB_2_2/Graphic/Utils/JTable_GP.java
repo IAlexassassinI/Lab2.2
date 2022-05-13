@@ -31,13 +31,13 @@ public class JTable_GP extends JTable {
     final static Color color2Text = new Color(0, 0, 0);
     final static Color color3Text = new Color(255, 255, 255);
 
-    final static Color color1Selected = new Color(165, 214, 167).brighter().brighter();
-    final static Color color2Selected = new Color(185, 246, 202).brighter().brighter();
-    final static Color color3Selected = new Color(46, 125, 50, 255).brighter().brighter();
+    final static Color color1Selected = new Color(165-40, 214-40, 167+50);//.brighter().brighter();
+    final static Color color2Selected = new Color(185-40, 246-40, 202+50);//.brighter().brighter();
+    final static Color color3Selected = new Color(46-40, 125-40, 50+50, 255);//.brighter().brighter();
 
-    final static Color color1SelectedText = new Color(0, 0, 0).darker().darker();
-    final static Color color2SelectedText = new Color(0, 0, 0).darker().darker();
-    final static Color color3SelectedText = new Color(255, 255, 255).darker().darker();
+    final static Color color1SelectedText = new Color(0, 0, 0);//.darker().darker();
+    final static Color color2SelectedText = new Color(0, 0, 0);//.darker().darker();
+    final static Color color3SelectedText = new Color(255, 255, 255);//.darker().darker();
 
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column){

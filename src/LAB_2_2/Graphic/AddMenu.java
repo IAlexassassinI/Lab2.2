@@ -7,9 +7,12 @@ import LAB_2_2.Exceptions.ProductNotExistException;
 import LAB_2_2.Group;
 import LAB_2_2.Product;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 
 public class AddMenu extends JDialog {
 
@@ -38,10 +41,13 @@ public class AddMenu extends JDialog {
 
     MainMenu Owner;
 
+    Image Icon = null;
+
     final static Color BackGroundColor = new Color(200, 230, 201);
 
-    AddMenu(Frame owner, boolean modal, Object PG){
+    AddMenu(Frame owner, boolean modal, Object PG) throws IOException {
         super(owner, modal);
+        this.setIconImage(Icon);
         Owner = (MainMenu)owner;
         InProd = null;
         InGroup = null;
@@ -59,7 +65,7 @@ public class AddMenu extends JDialog {
         initListeners();
     }
 
-    AddMenu(Frame owner, boolean modal, Product prod){
+    AddMenu(Frame owner, boolean modal, Product prod) throws IOException {
         super(owner, modal);
         Owner = (MainMenu)owner;
         InProd = prod;
@@ -68,7 +74,7 @@ public class AddMenu extends JDialog {
         initListeners();
     }
 
-    AddMenu(Frame owner, boolean modal, Group group){
+    AddMenu(Frame owner, boolean modal, Group group) throws IOException {
         super(owner, modal);
         Owner = (MainMenu)owner;
         InProd = null;
@@ -77,13 +83,15 @@ public class AddMenu extends JDialog {
         initListeners();
     }
 
-    private void initMainPanel(Frame owner, Group GG){
+    private void initMainPanel(Frame owner, Group GG) throws IOException {
         this.setTitle("Add menu");
         this.setLayout(new FlowLayout());
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.setSize(300,420);
         this.setResizable(false);
         this.setLocationRelativeTo(owner);
+        Icon = ImageIO.read(new File("Resourses\\Stock.png"));
+        this.setIconImage(Icon);
 
         MainPanel = new JPanel(new BorderLayout());
         this.add(MainPanel);
