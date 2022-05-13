@@ -13,8 +13,6 @@ import LAB_2_2.Model;
 import LAB_2_2.Product;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
@@ -37,6 +35,8 @@ public class MainMenu extends JFrame{
     private JPanel PanelGridButtons;
     private JButton GlobalInfo;
     private JButton Delta;
+    private JButton Save;
+    private JButton Load;
 
     private JPanel PanelBottom;
     private JPanel PanelBottomLeft;
@@ -66,13 +66,12 @@ public class MainMenu extends JFrame{
 
     Model OS_Model;
 
-    final static File WHERE_TO_SAVE = new File("Saves");
+    public final static File WHERE_TO_SAVE = new File("Saves");
 
 
     Object[][] DataForInfo = {};
 
     Object[][] DataForDelta = {};
-
 
 
 
@@ -124,6 +123,7 @@ public class MainMenu extends JFrame{
 
 
 
+
         PanelLeft = new JPanel(new FlowLayout(FlowLayout.LEFT));
         PanelMain.add(PanelLeft, BorderLayout.WEST);
         PanelGridButtons = new JPanel(new GridLayout(0,1));
@@ -134,6 +134,12 @@ public class MainMenu extends JFrame{
 
         Delta = new JButton("Delta");
         PanelGridButtons.add(Delta);
+
+        Save = new JButton("Save");
+        PanelGridButtons.add(Save);
+
+        Load = new JButton("Load");
+        PanelGridButtons.add(Load);
 
 
 
@@ -220,6 +226,9 @@ public class MainMenu extends JFrame{
         ActionListener ButtonPressed = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if(TableDelta.isEditing()){
+                    TableDelta.getCellEditor().stopCellEditing();
+                }
                 if(e.getSource() == GlobalInfo){
                     changeMenuToInfo();
                 }
@@ -270,6 +279,12 @@ public class MainMenu extends JFrame{
                 else if(e.getSource() == Cancel){
                     HandelCancel();
                 }
+                else if(e.getSource() == Save){
+                    THIS.OS_Model.save(THIS.WHERE_TO_SAVE);
+                }
+                else if(e.getSource() == Load){
+                    THIS.OS_Model.load(THIS.WHERE_TO_SAVE);
+                }
             }
         };
 
@@ -285,6 +300,8 @@ public class MainMenu extends JFrame{
 
         this.addWindowListener(CloseWindowPanel);
 
+        Save.addActionListener(ButtonPressed);
+        Load.addActionListener(ButtonPressed);
         Cancel.addActionListener(ButtonPressed);
         Apply.addActionListener(ButtonPressed);
         GlobalInfo.addActionListener(ButtonPressed);
@@ -323,7 +340,7 @@ public class MainMenu extends JFrame{
                OS_Model.removeProduct((Product)Rows[i]);
             }
             else if(Rows[i].getClass() == Group.class){
-                OS_Model.removeGroup(((Group)Rows[i]).getName()); //TODO Maybe
+                OS_Model.removeGroup(((Group)Rows[i]).getName());
             }
         }
     }
@@ -346,13 +363,11 @@ public class MainMenu extends JFrame{
 
     private void UpdateInfoTable(){
         DefaultTableModelInfo DTMI = new DefaultTableModelInfo(DataForInfo);
-        TableInfo.setDefaultRenderer(TableColumn.class, new DefaultTableCellRenderer());
         TableInfo.setModel(DTMI);
     }
 
     private void UpdateDeltaTable(){
         DefaultTableModelDelta DTMD = new DefaultTableModelDelta(DataForDelta);
-        TableDelta.setDefaultRenderer(TableColumn.class, new DefaultTableCellRenderer());
         TableDelta.setModel(DTMD);
     }
 
@@ -409,8 +424,13 @@ public class MainMenu extends JFrame{
         }
 
         OS_Model.delta(ForObrProd, ForObrInts);
-        Viewer MessageViewer = new Viewer(this, true, ForOutput.toString());
-        MessageViewer.setVisible(true);
+        if(ForOutput.toString().length() != 0){
+            Viewer MessageViewer = new Viewer(this, true, ForOutput.toString());
+            MessageViewer.setVisible(true);
+        }
+        else{
+            JOptionPane.showMessageDialog(this, "There are no changes!");
+        }
     }
 
     private void HandelCancel(){
