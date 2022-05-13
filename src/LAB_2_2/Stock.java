@@ -47,6 +47,7 @@ public class Stock implements Model {
         for(Group existedGroup : this.groups) {
             if(existedGroup.equals(group)) {
                 existedGroup.add(product);
+                sortProducts(existedGroup);
                 return;
             }
         }
@@ -75,18 +76,25 @@ public class Stock implements Model {
     }
 
     @Override
-    public void editProduct(Product product, Product newProductName) throws ProductNotExistException, ProductAlreadyExistException {
-        for(Group group : this.groups) {
-            if(group.contains(newProductName)) throw new ProductAlreadyExistException();
+    public void editProduct(Product product, Product newProduct) throws ProductNotExistException, ProductAlreadyExistException {
+        if(!product.equals(newProduct)) {
+            for(Group group : this.groups) {
+                if(group.contains(newProduct)) throw new ProductAlreadyExistException();
+            }
         }
         for(Group group : this.groups) {
             for(Product existedProduct : group) {
                 if(existedProduct.equals(product)) {
                     group.remove(existedProduct);
-                    group.add(newProductName);
-                    sortProducts(group);
-                    return;
+                    break;
                 }
+            }
+        }
+        for(Group group : this.groups) {
+            if(group.equals(newProduct.getGroup())) {
+                group.add(newProduct);
+                sortProducts(group);
+                return;
             }
         }
         throw new ProductNotExistException();
@@ -94,7 +102,7 @@ public class Stock implements Model {
 
     @Override
     public void editGroup(String groupName, String newGroupName) throws GroupNotExistException, GroupAlreadyExistException {
-        if(this.groups.contains(new Group(newGroupName))) throw new GroupAlreadyExistException();
+        if(!groupName.equals(newGroupName) && this.groups.contains(new Group(newGroupName))) throw new GroupAlreadyExistException();
         for(Group group : this.groups) {
             if(group.getName().equals(groupName)) {
                 group.setName(newGroupName);
