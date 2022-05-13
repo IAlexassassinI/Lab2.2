@@ -76,8 +76,8 @@ public class AddMenu extends JDialog {
         this.setLocationRelativeTo(owner);
 
         MainPanel = new JPanel(new BorderLayout());
-        MainPanel.setBackground(BackGroundColor);
         this.add(MainPanel);
+
 
 
         String FromWhatChoose[] = {"Product", "Group of products"};
@@ -86,6 +86,7 @@ public class AddMenu extends JDialog {
 
         CardForChange = new JPanel(new CardLayout());
         MainPanel.add(CardForChange, BorderLayout.CENTER);
+        //CardForChange.setPreferredSize(new Dimension(200,240));
 
         PanelButtons = new JPanel(new FlowLayout());
         MainPanel.add(PanelButtons, BorderLayout.SOUTH);
@@ -153,6 +154,14 @@ public class AddMenu extends JDialog {
             TMP_CardLayout.show(this.CardForChange, "GROUP");
             SetGroupFields();
         }
+
+        this.getContentPane().setBackground(BackGroundColor);
+        MainPanel.setBackground(BackGroundColor);
+        PanelToAddProduct.setBackground(BackGroundColor);
+        PanelButtons.setBackground(BackGroundColor);
+        PanelToAddGroup.setBackground(BackGroundColor);
+
+
 
     }
 
@@ -242,7 +251,7 @@ public class AddMenu extends JDialog {
     private Group AddNewGroup(){
         String Name = NameOfGroup.getText();
         return new Group(Name);
-    } //TODO Maybe would need to remade
+    }
 
     private void HandelComboboxChooseWhatToAdd(){
         CardLayout TMP_CardLayout = (CardLayout)this.CardForChange.getLayout();

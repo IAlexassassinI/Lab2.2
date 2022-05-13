@@ -14,7 +14,7 @@ public class JTable_GP extends JTable {
     public JTable_GP(TableModel Model){
         super(Model);
         this.setBackground(BackGroundColor);
-        //this.setSelectionBackground(Color.red);
+        this.setFillsViewportHeight(true);
     }
 
     public TableModel getDataModel(){
