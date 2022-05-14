@@ -1,4 +1,4 @@
-package LAB_2_2;
+package LAB_2_2.Model;
 
 import java.util.ArrayList;
 import java.util.Objects;

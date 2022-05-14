@@ -1,6 +1,6 @@
 package LAB_2_2.Graphic.Utils;
 
-import LAB_2_2.Group;
+import LAB_2_2.Model.Group;
 
 import javax.swing.table.DefaultTableModel;
 

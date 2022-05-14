@@ -8,9 +8,9 @@ import LAB_2_2.Graphic.Utils.ConsumeNotDigits;
 import LAB_2_2.Graphic.Utils.DefaultTableModelDelta;
 import LAB_2_2.Graphic.Utils.DefaultTableModelInfo;
 import LAB_2_2.Graphic.Utils.JTable_GP;
-import LAB_2_2.Group;
-import LAB_2_2.Model;
-import LAB_2_2.Product;
+import LAB_2_2.Model.Model;
+import LAB_2_2.Model.Group;
+import LAB_2_2.Model.Product;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

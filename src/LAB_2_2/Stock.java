@@ -1,6 +1,9 @@
 package LAB_2_2;
 
 import LAB_2_2.Exceptions.*;
+import LAB_2_2.Model.Group;
+import LAB_2_2.Model.Model;
+import LAB_2_2.Model.Product;
 
 import java.io.File;
 import java.util.ArrayList;

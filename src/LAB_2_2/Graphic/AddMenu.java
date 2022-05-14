@@ -4,8 +4,8 @@ import LAB_2_2.Exceptions.GroupAlreadyExistException;
 import LAB_2_2.Exceptions.GroupNotExistException;
 import LAB_2_2.Exceptions.ProductAlreadyExistException;
 import LAB_2_2.Exceptions.ProductNotExistException;
-import LAB_2_2.Group;
-import LAB_2_2.Product;
+import LAB_2_2.Model.Group;
+import LAB_2_2.Model.Product;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
