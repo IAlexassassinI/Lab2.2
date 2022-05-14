@@ -38,6 +38,7 @@ public class AddMenu extends JDialog {
 
     JPanel PanelToAddGroup;
     JTextField NameOfGroup;
+    JTextField DescriptionOfGroup;
 
     Product InProd;
     Group InGroup;
@@ -152,23 +153,23 @@ public class AddMenu extends JDialog {
         CardForChange.add(PanelToAddProduct, "PRODUCT");
 
         NameOfProduct = new JTextField(16);
-        PanelToAddProduct.add(new JLabel("Enter name of new product"));
+        PanelToAddProduct.add(new JLabel("Enter name of product"));
         PanelToAddProduct.add(new JPanel(new FlowLayout()).add(NameOfProduct));
 
         DescriptionOfProduct = new JTextField(16);
-        PanelToAddProduct.add(new JLabel("Enter description of new product"));
+        PanelToAddProduct.add(new JLabel("Enter description of product"));
         PanelToAddProduct.add(new JPanel(new FlowLayout()).add(DescriptionOfProduct));
 
         ProducerOfProduct = new JTextField(16);
-        PanelToAddProduct.add(new JLabel("Enter producer of new product"));
+        PanelToAddProduct.add(new JLabel("Enter producer of product"));
         PanelToAddProduct.add(new JPanel(new FlowLayout()).add(ProducerOfProduct));
 
         PriceOfProduct = new JTextField(16);
-        PanelToAddProduct.add(new JLabel("Enter price of new product"));
+        PanelToAddProduct.add(new JLabel("Enter price of product"));
         PanelToAddProduct.add(new JPanel(new FlowLayout()).add(PriceOfProduct));
 
         QuantityOfProduct = new JTextField(16);
-        PanelToAddProduct.add(new JLabel("Enter quantity of new product"));
+        PanelToAddProduct.add(new JLabel("Enter quantity of product"));
         PanelToAddProduct.add(new JPanel(new FlowLayout()).add(QuantityOfProduct));
 
         Group Groups[] = Owner.OS_Model.getStockByFilter(null,null).toArray(Group[]::new);
@@ -181,8 +182,12 @@ public class AddMenu extends JDialog {
         CardForChange.add(PanelToAddGroup, "GROUP");
 
         NameOfGroup = new JTextField(16);
-        PanelToAddGroup.add(new JLabel("Enter name of new group of product"));
+        PanelToAddGroup.add(new JLabel("Enter name of group of product"));
         PanelToAddGroup.add(new JPanel(new FlowLayout()).add(NameOfGroup));
+
+        DescriptionOfGroup = new JTextField(16);
+        PanelToAddGroup.add(new JLabel("Enter description of group of product"));
+        PanelToAddGroup.add(new JPanel(new FlowLayout()).add(DescriptionOfGroup));
 
         int ElementDeltaKostil = PanelToAddProduct.getComponentCount() - PanelToAddGroup.getComponentCount();
         for(int i = 0; i < ElementDeltaKostil; i++){
@@ -313,7 +318,8 @@ public class AddMenu extends JDialog {
      */
     private Group AddNewGroup(){
         String Name = NameOfGroup.getText();
-        return new Group(Name);
+        String Description = DescriptionOfGroup.getText();
+        return new Group(Name, Description);
     }
 
     /**
@@ -346,6 +352,7 @@ public class AddMenu extends JDialog {
      */
     private void SetGroupFields(){
         NameOfGroup.setText(InGroup.getName());
+        DescriptionOfGroup.setText(InGroup.getDescription());
     }
 
     /**
@@ -373,7 +380,8 @@ public class AddMenu extends JDialog {
         }
         else if(InGroup != null){
             //EDIT
-            this.Owner.OS_Model.editGroup(InGroup.getName(), AddNewGroup().getName());
+            Group TMP_Group = AddNewGroup();
+            this.Owner.OS_Model.editGroup(InGroup.getName(), TMP_Group.getName(), TMP_Group.getDescription());
         }
         this.dispose();
     }
