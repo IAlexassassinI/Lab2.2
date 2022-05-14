@@ -1,4 +1,4 @@
-package LAB_2_2;
+package LAB_2_2.Model;
 
 import LAB_2_2.Exceptions.*;
 

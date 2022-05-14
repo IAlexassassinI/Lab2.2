@@ -1,5 +1,8 @@
 package LAB_2_2;
 
+import LAB_2_2.Model.Group;
+import LAB_2_2.Model.Product;
+
 import java.io.*;
 import java.util.ArrayList;
 
