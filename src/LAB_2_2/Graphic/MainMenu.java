@@ -385,11 +385,17 @@ public class MainMenu extends JFrame{
         for (int i = 0; i < SelectedRows.length; i++){
             Rows[i] = DataForInfo[SelectedRows[i]][0];
         }
+        ArrayList<Group> DeletedGroups = new ArrayList<>();
+
         for(int i = 0; i < SelectedRows.length; i++){
             if(Rows[i].getClass() == Product.class){
+                if(DeletedGroups.contains(((Product)Rows[i]).getGroup())){
+                    continue;
+                }
                OS_Model.removeProduct((Product)Rows[i]);
             }
             else if(Rows[i].getClass() == Group.class){
+                DeletedGroups.add((Group)Rows[i]);
                 OS_Model.removeGroup(((Group)Rows[i]).getName());
             }
         }
