@@ -91,7 +91,7 @@ public class MainMenu extends JFrame{
      * @throws IOException
      */
     public MainMenu(Model Model) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
-        super("Stock Controller");
+        super("Stock");
         Icon = ImageIO.read(new File("Resourses\\Stock.png"));
         this.setIconImage(Icon);
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
