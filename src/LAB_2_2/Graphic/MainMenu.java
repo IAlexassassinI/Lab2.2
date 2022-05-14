@@ -581,7 +581,7 @@ public class MainMenu extends JFrame{
      * @return
      */
     private Object[] ParseGroupToInfoRow(Group InGroup){
-        return new Object[]{InGroup, "", "", "" ,"", ""+InGroup.getTotalCost()};
+        return new Object[]{InGroup, InGroup.getDescription(), "", "" ,"", ""+InGroup.getTotalCost()};
     }
 
     /**
