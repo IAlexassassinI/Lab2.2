@@ -322,6 +322,7 @@ public class MainMenu extends JFrame{
                 }
                 else if(e.getSource() == Load){
                     THIS.OS_Model.load(THIS.WHERE_TO_SAVE);
+                    UpdateAll();
                 }
             }
         };
