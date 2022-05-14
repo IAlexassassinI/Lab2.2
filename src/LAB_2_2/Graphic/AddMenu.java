@@ -71,7 +71,7 @@ public class AddMenu extends JDialog {
                 GG = ((Product)PG).getGroup();
             }
         }
-
+        this.setTitle("Add menu");
         initMainPanel(owner, GG);
         initListeners();
     }
@@ -90,6 +90,7 @@ public class AddMenu extends JDialog {
         InGroup = null;
         initMainPanel(owner, null);
         initListeners();
+        this.setTitle("Edit menu");
     }
 
     /**
@@ -106,6 +107,7 @@ public class AddMenu extends JDialog {
         InGroup = group;
         initMainPanel(owner, null);
         initListeners();
+        this.setTitle("Edit menu");
     }
 
     /**
@@ -115,7 +117,7 @@ public class AddMenu extends JDialog {
      * @throws IOException
      */
     private void initMainPanel(Frame owner, Group GG) throws IOException {
-        this.setTitle("Add menu");
+
         this.setLayout(new FlowLayout());
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.setSize(300,420);
