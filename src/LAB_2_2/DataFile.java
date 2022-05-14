@@ -55,6 +55,7 @@ public class DataFile {
             FileWriter fw  = new FileWriter(directory.getAbsolutePath() + "\\groups");
             for(int i = 0; i < stock.getGroups().size(); i++) {
                 fw.write(stock.getGroups().get(i).getName() + "\n");
+                fw.write(stock.getGroups().get(i).getDescription() + "\n");
                 if(!saveGroup(directory, stock.getGroups().get(i), i+1)){
                     //System.out.println("!saveGroup" + stock.getGroups().get(i));
                     return false;
@@ -124,7 +125,7 @@ public class DataFile {
             BufferedReader reader = new BufferedReader(new FileReader(directory.getAbsolutePath() + "\\groups"));
             ArrayList<Group> groups = new ArrayList<>();
             for(File f : directory.listFiles()) {
-                if(f.isDirectory() && !loadGroup(f, groups, reader.readLine())){
+                if(f.isDirectory() && !loadGroup(f, groups, reader.readLine(), reader.readLine())){
                     reader.close();
                     return false;
                 }
@@ -143,12 +144,13 @@ public class DataFile {
      * @param f file of group to load from
      * @param groups list of groups
      * @param groupName name of group
+     * @param groupDescription description of group
      * @return true if loaded successfully and false if not
      */
 
-    private boolean loadGroup(File f, ArrayList<Group> groups, String groupName) {
+    private boolean loadGroup(File f, ArrayList<Group> groups, String groupName, String groupDescription) {
         if(!f.isDirectory()) return false;
-        Group group = new Group(groupName);
+        Group group = new Group(groupName, groupDescription);
         for (File file : f.listFiles()) {
             if(!loadProducts(file, group))return false;
         }

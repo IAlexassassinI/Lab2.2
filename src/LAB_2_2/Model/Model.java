@@ -75,6 +75,7 @@ public interface Model {
      *
      * @param groupName name of group to edit
      * @param newGroupName new group name
+     * @param newGroupDescription new group description
      * @throws GroupNotExistException
      * @throws GroupAlreadyExistException
      */

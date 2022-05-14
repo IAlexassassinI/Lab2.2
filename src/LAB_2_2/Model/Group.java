@@ -95,9 +95,21 @@ public class Group extends ArrayList<Product> {
         this.name = name;
     }
 
+    /**
+     * returns description of group
+     *
+     * @return description of group
+     */
+
     public String getDescription() {
         return description;
     }
+
+    /**
+     * sets new description of group
+     *
+     * @param description new description of group
+     */
 
     public void setDescription(String description) {
         this.description = description;
