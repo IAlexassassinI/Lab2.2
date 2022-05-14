@@ -14,6 +14,9 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Menu for adding Group or Product
+ */
 public class AddMenu extends JDialog {
 
     JButton Apply;
@@ -45,6 +48,13 @@ public class AddMenu extends JDialog {
 
     final static Color BackGroundColor = new Color(200, 230, 201);
 
+    /**
+     * Create Menu for adding Group or Product
+     * @param owner
+     * @param modal
+     * @param PG
+     * @throws IOException
+     */
     AddMenu(Frame owner, boolean modal, Object PG) throws IOException {
         super(owner, modal);
         this.setIconImage(Icon);
@@ -65,6 +75,13 @@ public class AddMenu extends JDialog {
         initListeners();
     }
 
+    /**
+     * Create Menu for adding Group or Product
+     * @param owner
+     * @param modal
+     * @param prod
+     * @throws IOException
+     */
     AddMenu(Frame owner, boolean modal, Product prod) throws IOException {
         super(owner, modal);
         Owner = (MainMenu)owner;
@@ -74,6 +91,13 @@ public class AddMenu extends JDialog {
         initListeners();
     }
 
+    /**
+     * Create Menu for adding Group or Product
+     * @param owner
+     * @param modal
+     * @param group
+     * @throws IOException
+     */
     AddMenu(Frame owner, boolean modal, Group group) throws IOException {
         super(owner, modal);
         Owner = (MainMenu)owner;
@@ -83,6 +107,12 @@ public class AddMenu extends JDialog {
         initListeners();
     }
 
+    /**
+     * initMainPanel
+     * @param owner
+     * @param GG
+     * @throws IOException
+     */
     private void initMainPanel(Frame owner, Group GG) throws IOException {
         this.setTitle("Add menu");
         this.setLayout(new FlowLayout());
@@ -186,6 +216,9 @@ public class AddMenu extends JDialog {
 
     }
 
+    /**
+     * initListeners
+     */
     private void initListeners(){
         AddMenu THIS = this;
         ItemListener ComboBox = new ItemListener() {
@@ -257,6 +290,11 @@ public class AddMenu extends JDialog {
 
     }
 
+    /**
+     * AddNewProduct
+     * @return
+     * @throws NumberFormatException
+     */
     private Object[] AddNewProduct() throws NumberFormatException{
         String Name = NameOfProduct.getText();
         String Description = DescriptionOfProduct.getText();
@@ -269,11 +307,18 @@ public class AddMenu extends JDialog {
         return new Object[]{new Product(Name,Description,Producer,price,quantity,GG), GG};
     }
 
+    /**
+     * AddNewGroup
+     * @return Group
+     */
     private Group AddNewGroup(){
         String Name = NameOfGroup.getText();
         return new Group(Name);
     }
 
+    /**
+     * HandelComboboxChooseWhatToAdd
+     */
     private void HandelComboboxChooseWhatToAdd(){
         CardLayout TMP_CardLayout = (CardLayout)this.CardForChange.getLayout();
         if(ChooseWhatToAdd.getSelectedIndex() == 0){
@@ -284,6 +329,9 @@ public class AddMenu extends JDialog {
         }
     }
 
+    /**
+     * SetProductFields
+     */
     private void SetProductFields(){
         NameOfProduct.setText(InProd.getName());
         DescriptionOfProduct.setText(InProd.getDescription());
@@ -293,10 +341,21 @@ public class AddMenu extends JDialog {
         GroupOfProduct.setSelectedItem(InProd.getGroup());
     }
 
+    /**
+     * SetGroupFields
+     */
     private void SetGroupFields(){
         NameOfGroup.setText(InGroup.getName());
     }
 
+    /**
+     * HandleApply
+     * @throws ProductAlreadyExistException
+     * @throws GroupNotExistException
+     * @throws NumberFormatException
+     * @throws GroupAlreadyExistException
+     * @throws ProductNotExistException
+     */
     private void HandleApply() throws ProductAlreadyExistException, GroupNotExistException, NumberFormatException, GroupAlreadyExistException, ProductNotExistException {
         if(InGroup == null && InProd == null){
             //ADD

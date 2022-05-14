@@ -3,6 +3,10 @@ package LAB_2_2.Graphic.Utils;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+
+/**
+ * Listener to not give digits to text field
+ */
 public class ConsumeNotDigits implements KeyListener {
     @Override
     public void keyTyped(KeyEvent e) {

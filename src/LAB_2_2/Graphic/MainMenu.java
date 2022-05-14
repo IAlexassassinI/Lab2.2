@@ -22,6 +22,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 
+/**
+ * Create MainMenu for program
+ */
 public class MainMenu extends JFrame{
 
     private JPanel PanelMain;
@@ -78,6 +81,15 @@ public class MainMenu extends JFrame{
     Image Icon = null;
 
 
+    /**
+     * Create MainMenu for program
+     * @param Model
+     * @throws UnsupportedLookAndFeelException
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws IOException
+     */
     public MainMenu(Model Model) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, IOException {
         super("Stock Controller");
         Icon = ImageIO.read(new File("Resourses\\Stock.png"));
@@ -99,6 +111,9 @@ public class MainMenu extends JFrame{
 
     final static Color BackGroundColor = new Color(102, 187, 106);
 
+    /**
+     * initMainMenu
+     */
     private void initMainMenu(){
         PanelMain = new JPanel(new BorderLayout());
         JLabel BorderCreator = new JLabel("   ");
@@ -224,6 +239,9 @@ public class MainMenu extends JFrame{
         this.add(PanelMain);
     }
 
+    /**
+     * initListeners
+     */
     private void initListeners(){
         MainMenu THIS = this;
 
@@ -292,6 +310,9 @@ public class MainMenu extends JFrame{
                     catch(ProductsAndDeltasArraysNotMatchException E){
                         System.err.println("WTF");
                     }
+                    catch(IOException E){
+                        System.err.println("WTF");
+                    }
                 }
                 else if(e.getSource() == Cancel){
                     HandelCancel();
@@ -330,6 +351,9 @@ public class MainMenu extends JFrame{
         TableDelta.addKeyListener(new ConsumeNotDigits());
     }
 
+    /**
+     * changeMenuToDelta
+     */
     private void changeMenuToDelta(){
         CardLayout TMP_CardLayout = (CardLayout)this.CardPanelBottomRight.getLayout();
         TMP_CardLayout.show(this.CardPanelBottomRight, "FOR_DELTA");
@@ -338,6 +362,9 @@ public class MainMenu extends JFrame{
         TMP_CardLayout.show(this.CardPanelCenter, "FOR_DELTA");
     }
 
+    /**
+     * changeMenuToInfo
+     */
     private void changeMenuToInfo(){
         CardLayout TMP_CardLayout = (CardLayout)this.CardPanelBottomRight.getLayout();
         TMP_CardLayout.show(this.CardPanelBottomRight, "FOR_INFO");
@@ -346,6 +373,11 @@ public class MainMenu extends JFrame{
         TMP_CardLayout.show(this.CardPanelCenter, "FOR_INFO");
     }
 
+    /**
+     * DeleteSelectedRows
+     * @throws GroupNotExistException
+     * @throws ProductNotExistException
+     */
     private void DeleteSelectedRows() throws GroupNotExistException, ProductNotExistException {
         int SelectedRows[] = TableInfo.getSelectedRows();
         Object Rows[] = new Object[SelectedRows.length];
@@ -362,6 +394,10 @@ public class MainMenu extends JFrame{
         }
     }
 
+    /**
+     * DoEdit
+     * @throws IOException
+     */
     private void DoEdit() throws IOException {
         int SelectedRowIs = TableInfo.getSelectedRow();
         if(SelectedRowIs == -1){
@@ -378,16 +414,25 @@ public class MainMenu extends JFrame{
         }
     }
 
+    /**
+     * UpdateInfoTable
+     */
     private void UpdateInfoTable(){
         DefaultTableModelInfo DTMI = new DefaultTableModelInfo(DataForInfo);
         TableInfo.setModel(DTMI);
     }
 
+    /**
+     * UpdateDeltaTable
+     */
     private void UpdateDeltaTable(){
         DefaultTableModelDelta DTMD = new DefaultTableModelDelta(DataForDelta);
         TableDelta.setModel(DTMD);
     }
 
+    /**
+     * DoSearch
+     */
     private void DoSearch(){
         String ProductSearch = TextFieldForProductSearch.getText();
         String GroupSearch = TextFieldForGroupSearch.getText();
@@ -396,6 +441,9 @@ public class MainMenu extends JFrame{
         DataForDelta = ParseToDeltaTableData(ModelData);
     }
 
+    /**
+     * UpdateAll
+     */
     void UpdateAll(){
         DoSearch();
         LabelGlobalValue.setText("Global Value of goods in stock: "+OS_Model.getTotalCost());
@@ -403,7 +451,14 @@ public class MainMenu extends JFrame{
         UpdateDeltaTable();
     }
 
-    private void HandelApply() throws NumberFormatException, SellMoreThenInStockException, ProductNotExistException, ProductsAndDeltasArraysNotMatchException {
+    /**
+     * HandelApply
+     * @throws NumberFormatException
+     * @throws SellMoreThenInStockException
+     * @throws ProductNotExistException
+     * @throws ProductsAndDeltasArraysNotMatchException
+     */
+    private void HandelApply() throws NumberFormatException, SellMoreThenInStockException, ProductNotExistException, ProductsAndDeltasArraysNotMatchException, IOException {
         ArrayList<Product> ForObrProd = new ArrayList<>();
 
         ArrayList<Integer> PlusDelta = new ArrayList<>();
@@ -450,10 +505,18 @@ public class MainMenu extends JFrame{
         }
     }
 
+    /**
+     * HandelCancel
+     */
     private void HandelCancel(){
         UpdateAll();
     }
 
+    /**
+     * ParseToInfoTableData
+     * @param ModelData
+     * @return
+     */
     private Object[][] ParseToInfoTableData(ArrayList<Group> ModelData){
         LinkedList<Object[]> Res = new LinkedList<Object[]>();
         for(int i = 0; i < ModelData.size(); i++){
@@ -472,6 +535,11 @@ public class MainMenu extends JFrame{
         return Res.toArray(new Object[][]{});
     }
 
+    /**
+     * ParseToDeltaTableData
+     * @param ModelData
+     * @return
+     */
     private Object[][] ParseToDeltaTableData(ArrayList<Group> ModelData){
         LinkedList<Object[]> Res = new LinkedList<Object[]>();
         for(int i = 0; i < ModelData.size(); i++){
@@ -488,18 +556,38 @@ public class MainMenu extends JFrame{
         return Res.toArray(new Object[][]{});
     }
 
+    /**
+     * ParseProductToInfoRow
+     * @param InProduct
+     * @return
+     */
     private Object[] ParseProductToInfoRow(Product InProduct){
         return new Object[]{InProduct, InProduct.getDescription(), InProduct.getProducer(), ""+InProduct.getPrice(), ""+InProduct.getQuantity(), ""+InProduct.getTotalCost()};
     }
 
+    /**
+     * ParseProductToDeltaRow
+     * @param InProduct
+     * @return
+     */
     private Object[] ParseProductToDeltaRow(Product InProduct){
         return new Object[]{InProduct, ""+InProduct.getQuantity(), "", ""};
     }
 
+    /**
+     * ParseGroupToInfoRow
+     * @param InGroup
+     * @return
+     */
     private Object[] ParseGroupToInfoRow(Group InGroup){
         return new Object[]{InGroup, "", "", "" ,"", ""+InGroup.getTotalCost()};
     }
 
+    /**
+     * ParseGroupToDeltaRow
+     * @param InGroup
+     * @return
+     */
     private Object[] ParseGroupToDeltaRow(Group InGroup){
         return new Object[]{InGroup, "", "", ""};
     }

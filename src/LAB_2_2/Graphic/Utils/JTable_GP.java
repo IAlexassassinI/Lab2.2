@@ -7,16 +7,27 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
+/**
+ * JTable for menu to draw cells correctly
+ */
 public class JTable_GP extends JTable {
 
     final static Color BackGroundColor = new Color(200, 230, 201);
 
+    /**
+     * JTable for menu to draw cells correctly
+     * @param Model
+     */
     public JTable_GP(TableModel Model){
         super(Model);
         this.setBackground(BackGroundColor);
         this.setFillsViewportHeight(true);
     }
 
+
+    /**
+     * @return dataModel
+     */
     public TableModel getDataModel(){
         return dataModel;
     }
