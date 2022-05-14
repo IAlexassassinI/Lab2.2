@@ -79,7 +79,7 @@ public interface Model {
      * @throws GroupAlreadyExistException
      */
 
-    void editGroup(String groupName, String newGroupName) throws GroupNotExistException, GroupAlreadyExistException;
+    void editGroup(String groupName, String newGroupName, String newGroupDescription) throws GroupNotExistException, GroupAlreadyExistException;
 
     /**
      * removes specific product
