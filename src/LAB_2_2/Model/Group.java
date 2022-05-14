@@ -10,16 +10,19 @@ import java.util.Objects;
 public class Group extends ArrayList<Product> {
 
     private String name;
+    private String description;
     private boolean visible;
 
     /**
      * constructor
      *
      * @param name name of group
+     * @param description description of group
      */
 
-    public Group(String name) {
+    public Group(String name, String description) {
         this.name = name;
+        this.description = description;
         this.visible = true;
     }
 
@@ -90,6 +93,14 @@ public class Group extends ArrayList<Product> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
