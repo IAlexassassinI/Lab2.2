@@ -1,30 +1,51 @@
 package LAB_2_2.Graphic;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.html.FormView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.io.IOException;
 
 
+/**
+ * Create Viewer to show changed values in big text screen
+ */
 public class Viewer extends JDialog {
     JButton ok;
     JPanel MainPanel;
     Viewer THIS = this;
 
-    public Viewer(Frame owner, boolean modal, String ForView){
+
+    /**
+     * Create Viewer to show changed values in big text screen
+     * @param owner
+     * @param modal
+     * @param ForView
+     * @throws IOException
+     */
+    public Viewer(Frame owner, boolean modal, String ForView) throws IOException {
         super(owner, modal);
         initMainPanel(owner, ForView);
         initListeners();
         pack();
     }
 
-    final static Color BackGroundColor = new Color(200, 230, 201);
+    final static Color BackGroundColor = new Color(102, 187, 106);
+    final static Color BackGroundTextColor = new Color(200, 230, 201);
 
-    private void initMainPanel(Frame owner, String ForView) {
-        this.setTitle("Secret information");
+
+    /**
+     * Create Viewer to show changed values in big text screen
+     * @param owner
+     * @param ForView
+     * @throws IOException
+     */
+    private void initMainPanel(Frame owner, String ForView) throws IOException {
+        this.setTitle("Changes viewer");
         this.setLayout(new FlowLayout());
         this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.setSize(400,420);
@@ -55,8 +76,22 @@ public class Viewer extends JDialog {
         this.add(MainPanel);
         this.setResizable(false);
         this.setLocationRelativeTo(owner);
+
+        this.setBackground(BackGroundColor);
+        this.getContentPane().setBackground(BackGroundColor);
+        MainPanel.setBackground(BackGroundColor);
+        BigText.setBackground(BackGroundTextColor);
+        OkButtonPanel.setBackground(BackGroundColor);
+
+        Image Icon = ImageIO.read(new File("Resourses\\Stock.png"));
+        this.setIconImage(Icon);
+
+
     }
 
+    /**
+     * initListeners
+     */
     private void initListeners() {
         ActionListener CloseOnClick = new ActionListener() {
             @Override
