@@ -173,16 +173,18 @@ public class Stock implements Model {
      *
      * @param groupName name of group to edit
      * @param newGroupName new group name
+     * @param newGroupDescription new description of group
      * @throws GroupNotExistException
      * @throws GroupAlreadyExistException
      */
 
     @Override
-    public void editGroup(String groupName, String newGroupName) throws GroupNotExistException, GroupAlreadyExistException {
-        if(!groupName.equals(newGroupName) && this.groups.contains(new Group(newGroupName))) throw new GroupAlreadyExistException();
+    public void editGroup(String groupName, String newGroupName, String newGroupDescription) throws GroupNotExistException, GroupAlreadyExistException {
+        if(!groupName.equals(newGroupName) && this.groups.contains(new Group(newGroupName, newGroupDescription))) throw new GroupAlreadyExistException();
         for(Group group : this.groups) {
             if(group.getName().equals(groupName)) {
                 group.setName(newGroupName);
+                group.setDescription(newGroupDescription);
                 sortGroups();
                 return;
             }
